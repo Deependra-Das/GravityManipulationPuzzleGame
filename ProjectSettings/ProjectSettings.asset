@@ -4,7 +4,7 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 28
-  productGUID: 31199b59b8d9d82479cfc4d423164dc1
+  productGUID: f53f8cf367db6c94f882e3ba6477d47f
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: GravityManipulationGame
+  productName: GravityManipulationPuzzleGame
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -844,16 +844,16 @@ PlayerSettings:
   editorAssembliesCompatibilityLevel: 1
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: GravityManipulationGame
-  metroPackageVersion: 1.0.0.0
+  metroPackageName: GravityManipulationPuzzleGame
+  metroPackageVersion: 
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
   metroCertificateIssuer: 
   metroCertificateNotAfter: 0000000000000000
-  metroApplicationDescription: GravityManipulationGame
+  metroApplicationDescription: GravityManipulationPuzzleGame
   wsaImages: {}
-  metroTileShortName: GravityManipulationGame
+  metroTileShortName: 
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
@@ -922,10 +922,10 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
-  cloudProjectId: fa69d380-5bad-48d5-876b-5962bfe431c9
+  cloudProjectId: b5d17462-1c56-4e04-8361-8e411fc7acb5
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: GravityManipulationGame
+  projectName: GravityManipulationPuzzleGame 2026-04-09_11-31-25
   organizationId: iamdeep75
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
