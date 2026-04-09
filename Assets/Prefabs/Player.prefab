@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6587652884794969587}
+  - component: {fileID: 1169201618415420960}
   - component: {fileID: 4513718065087919845}
   - component: {fileID: 264125126657756818}
   m_Layer: 0
@@ -35,6 +36,28 @@ Transform:
   - {fileID: 3118536950455742330}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1169201618415420960
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 967391655062317020}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: e72e58f551acc564ca8e275d02b201d7, type: 3}
+  m_Controller: {fileID: 9100000, guid: 605a3f1c8f821554384a69170f75dcc7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!143 &4513718065087919845
 CharacterController:
   m_ObjectHideFlags: 0
@@ -76,6 +99,7 @@ MonoBehaviour:
   _jumpForce: 8
   _gravity: -20
   _groundDistance: 0.2
+  _animator: {fileID: 1169201618415420960}
   _cameraTransform: {fileID: 0}
   _groundCheck: {fileID: 3118536950455742330}
   _groundMask:
