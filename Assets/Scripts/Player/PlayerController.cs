@@ -5,7 +5,8 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    [SerializeField] private float _moveSpeed = 5f;
+    [SerializeField] private float _moveSpeed = 2f;
+    [SerializeField] private float _sprintSpeed = 5f;
     [SerializeField] private float _jumpForce = 8f;
     [SerializeField] private float _gravity = -20f;
     [SerializeField] private float _groundDistance = 0.2f;
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour
 
     private CharacterController _controller;
     private InputAction _moveAction;
+    private InputAction _sprintAction;
     private InputAction _jumpAction;
     private InputAction _lookAction;
 
@@ -27,14 +29,32 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 _velocity;
     private Vector2 _moveInput;
+    private bool _isSprinting;
     private bool _isGrounded;
     private bool _wasGrounded;
 
     private int _speedHash;
+    private int _motionHash;
     private int _groundedHash;
     private int _verticalHash;
     private int _jumpStartTrigger;
     private int _jumpLandTrigger;
+
+    void OnEnable()
+    {
+        _moveAction.Enable();
+        _jumpAction.Enable();
+        _lookAction.Enable();
+        _sprintAction.Enable();
+    }
+
+    void OnDisable()
+    {
+        _moveAction.Disable();
+        _jumpAction.Disable();
+        _lookAction.Disable();
+        _sprintAction.Disable();
+    }
 
     void Awake()
     {
@@ -44,33 +64,27 @@ public class PlayerController : MonoBehaviour
         _moveAction = actionMap.FindAction("Move");
         _jumpAction = actionMap.FindAction("Jump");
         _lookAction = actionMap.FindAction("Look");
+        _sprintAction = actionMap.FindAction("Sprint");
 
         _moveAction.performed += ctx => _moveInput = ctx.ReadValue<Vector2>();
         _moveAction.canceled += ctx => _moveInput = Vector2.zero;
         _jumpAction.performed += ctx => Jump();
         _lookAction.performed += ctx => _lookInput = ctx.ReadValue<Vector2>();
         _lookAction.canceled += ctx => _lookInput = Vector2.zero;
+        _sprintAction.performed += ctx => _isSprinting = true;
+        _sprintAction.canceled += ctx => _isSprinting = false;
 
+        AssignAnimationIDs();
+    }
 
+    private void AssignAnimationIDs()
+    {
         _speedHash = Animator.StringToHash("Speed");
+        _motionHash = Animator.StringToHash("MotionSpeed");
         _groundedHash = Animator.StringToHash("IsGrounded");
         _verticalHash = Animator.StringToHash("VerticalVelocity");
         _jumpStartTrigger = Animator.StringToHash("JumpStart");
         _jumpLandTrigger = Animator.StringToHash("JumpLand");
-    }
-
-    void OnEnable()
-    {
-        _moveAction.Enable();
-        _jumpAction.Enable();
-        _lookAction.Enable();
-    }
-
-    void OnDisable()
-    {
-        _moveAction.Disable();
-        _jumpAction.Disable();
-        _lookAction.Disable();
     }
 
     void Update()
@@ -94,7 +108,8 @@ public class PlayerController : MonoBehaviour
         Vector3 camRight = Vector3.Cross(Vector3.up, camForward);
 
         Vector3 move = camForward * _moveInput.y + camRight * _moveInput.x;
-        _controller.Move(move * _moveSpeed * Time.deltaTime);
+        float currentSpeed = _isSprinting ? _sprintSpeed : _moveSpeed;
+        _controller.Move(move * currentSpeed * Time.deltaTime);
 
         if (move.magnitude > 0.1f)
         {
@@ -137,8 +152,9 @@ public class PlayerController : MonoBehaviour
         Vector3 camRight = Vector3.Cross(Vector3.up, camForward);
         Vector3 move = camForward * _moveInput.y + camRight * _moveInput.x;
 
-        float speed = move.magnitude;
-        float smoothSpeed = Mathf.Lerp(_animator.GetFloat(_speedHash), speed, 10f * Time.deltaTime);
+        float motionSpeed = _isSprinting ? _sprintSpeed : move.magnitude;
+
+        float smoothSpeed = Mathf.Lerp(_animator.GetFloat(_speedHash), motionSpeed, 10f * Time.deltaTime);
         _animator.SetFloat(_speedHash, smoothSpeed);
 
         bool groundedForAnim = _isGrounded && _velocity.y <= 0;
