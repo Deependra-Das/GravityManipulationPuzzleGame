@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _gravity = -20f;
     [SerializeField] private float _groundDistance = 0.2f;
     [SerializeField] private float _rotationSpeed = 8f;
-    [SerializeField] private float _wallCheckDistance = 1.2f;
+    [SerializeField] private float _wallCheckDistance = 10f;
 
     [Header("References")]
     [SerializeField] private Animator _animator;
@@ -58,6 +58,8 @@ public class PlayerController : MonoBehaviour
         _jumpAction.Enable();
         _lookAction.Enable();
         _sprintAction.Enable();
+        _gravityShiftDirection.Enable();
+        _gravityShiftAction.Enable();
 
     }
 
@@ -67,6 +69,8 @@ public class PlayerController : MonoBehaviour
         _jumpAction.Disable();
         _lookAction.Disable();
         _sprintAction.Disable();
+        _gravityShiftDirection.Disable();
+        _gravityShiftAction.Disable();
     }
 
     void Awake()
@@ -94,7 +98,6 @@ public class PlayerController : MonoBehaviour
 
         _gravityShiftDirection.performed += ctx => _gravityShiftDirectionInput = ctx.ReadValue<Vector2>();
         _gravityShiftDirection.canceled += ctx => _gravityShiftDirectionInput = Vector2.zero;
-        _gravityShiftAction.performed += ctx => TryGravityShift();
 
         AssignAnimationIDs();
     }
@@ -116,6 +119,11 @@ public class PlayerController : MonoBehaviour
         if (!_isRotating)
         {
             HandleMovement();
+        }
+
+        if (_gravityShiftAction.IsPressed())
+        {
+            TryGravityShift();
         }
 
         ApplyGravity();
@@ -220,7 +228,10 @@ public class PlayerController : MonoBehaviour
         if (_isRotating) return;
         if (!_isGrounded) return;
 
-        Vector2 input = _gravityShiftDirectionInput;
+        if (!_gravityShiftAction.IsPressed())
+            return;
+
+        Vector2 input = _gravityShiftDirection.ReadValue<Vector2>();
 
         if (input.sqrMagnitude < 0.1f)
             return;
@@ -236,6 +247,24 @@ public class PlayerController : MonoBehaviour
             return;
 
         direction.Normalize();
+
+        RaycastHit hit;
+        if (CheckForWall(direction, out hit))
+        {
+            Debug.Log("Wall Hit: " + hit.collider.name);
+        }
+    }
+
+    bool CheckForWall(Vector3 direction, out RaycastHit hit)
+    {
+        Vector3 up = -_gravityDirection;
+        Vector3 origin = transform.position + (up * (_controller.height / 2f));
+
+        Vector3 rayDirection = (direction + _gravityDirection).normalized;
+
+        Debug.DrawRay(origin, rayDirection * _wallCheckDistance, Color.blue);
+
+        return Physics.Raycast(origin, rayDirection, out hit, _wallCheckDistance, _groundMask);
     }
 
     void OnDrawGizmosSelected()
