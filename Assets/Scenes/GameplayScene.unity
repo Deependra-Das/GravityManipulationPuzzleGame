@@ -1099,6 +1099,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 264125126657756818, guid: e266d324aedd18c47b63edc256cf4ca7, type: 3}
+      propertyPath: _rotationSpeed
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 264125126657756818, guid: e266d324aedd18c47b63edc256cf4ca7, type: 3}
       propertyPath: _groundDistance
       value: 0.1
       objectReference: {fileID: 0}
@@ -1106,9 +1110,25 @@ PrefabInstance:
       propertyPath: _cameraTransform
       value: 
       objectReference: {fileID: 1008170508}
+    - target: {fileID: 264125126657756818, guid: e266d324aedd18c47b63edc256cf4ca7, type: 3}
+      propertyPath: _wallCheckDistance
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 967391655062317020, guid: e266d324aedd18c47b63edc256cf4ca7, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 1169201618415420960, guid: e266d324aedd18c47b63edc256cf4ca7, type: 3}
+      propertyPath: m_CullingMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1169201618415420960, guid: e266d324aedd18c47b63edc256cf4ca7, type: 3}
+      propertyPath: m_AnimatePhysics
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1169201618415420960, guid: e266d324aedd18c47b63edc256cf4ca7, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3118536950455742330, guid: e266d324aedd18c47b63edc256cf4ca7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1117,6 +1137,10 @@ PrefabInstance:
     - target: {fileID: 4513718065087919845, guid: e266d324aedd18c47b63edc256cf4ca7, type: 3}
       propertyPath: m_Height
       value: 1.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 4513718065087919845, guid: e266d324aedd18c47b63edc256cf4ca7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4513718065087919845, guid: e266d324aedd18c47b63edc256cf4ca7, type: 3}
       propertyPath: m_Center.y

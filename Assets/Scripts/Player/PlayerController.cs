@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _gravity = -20f;
     [SerializeField] private float _groundDistance = 0.2f;
     [SerializeField] private float _rotationSpeed = 8f;
-    [SerializeField] private float _wallCheckDistance = 10f;
+    [SerializeField] private float _wallCheckDistance = 100f;
 
     [Header("References")]
     [SerializeField] private Animator _animator;
@@ -43,14 +43,17 @@ public class PlayerController : MonoBehaviour
     private bool _isGrounded;
     private bool _wasGrounded;
     private bool _isRotating = false;
-    private bool _useGravity = true;
+    private bool _controlsLocked;
+    private bool _cameraLocked;
 
     private int _speedHash;
     private int _motionHash;
     private int _groundedHash;
     private int _verticalHash;
     private int _jumpStartTrigger;
-    private int _jumpLandTrigger; 
+    private int _jumpLandTrigger;
+
+    public Vector3 GravityDirection => _gravityDirection;
 
     void OnEnable()
     {
@@ -116,17 +119,17 @@ public class PlayerController : MonoBehaviour
     {
         GroundCheck();
 
-        if (!_isRotating)
+        if (!_isRotating && !_controlsLocked)
         {
             HandleMovement();
+            ApplyGravity();
+
+            if (_gravityShiftAction.IsPressed())
+            {
+                TryGravityShift();
+            }
         }
 
-        if (_gravityShiftAction.IsPressed())
-        {
-            TryGravityShift();
-        }
-
-        ApplyGravity();
         UpdateAnimations();
 
         if (!_wasGrounded && _isGrounded)
@@ -147,6 +150,8 @@ public class PlayerController : MonoBehaviour
         Vector3 move = camForward * _moveInput.y + camRight * _moveInput.x;
         float currentSpeed = _isSprinting ? _sprintSpeed : _moveSpeed;
         _controller.Move(move * currentSpeed * Time.deltaTime);
+
+        if (_isRotating) return;
 
         if (move.magnitude > 0.1f)
         {
@@ -252,6 +257,8 @@ public class PlayerController : MonoBehaviour
         if (CheckForWall(direction, out hit))
         {
             Debug.Log("Wall Hit: " + hit.collider.name);
+            Vector3 newGravity = -hit.normal;
+            StartGravityShift(newGravity);
         }
     }
 
@@ -260,11 +267,72 @@ public class PlayerController : MonoBehaviour
         Vector3 up = -_gravityDirection;
         Vector3 origin = transform.position + (up * (_controller.height / 2f));
 
-        Vector3 rayDirection = (direction + _gravityDirection).normalized;
+        Vector3 rayDirection = (direction).normalized;
 
         Debug.DrawRay(origin, rayDirection * _wallCheckDistance, Color.blue);
 
         return Physics.Raycast(origin, rayDirection, out hit, _wallCheckDistance, _groundMask);
+    }
+
+    void StartGravityShift(Vector3 newGravity)
+    {
+        if (_isRotating) return;
+
+        Vector3 currentUp = -_gravityDirection;
+        Vector3 targetUp = -newGravity;
+
+        Vector3 rotationAxis = Vector3.Cross(currentUp, targetUp);
+
+        if (rotationAxis.sqrMagnitude < 0.001f)
+        {
+            rotationAxis = transform.right;
+        }
+
+        rotationAxis.Normalize();
+
+        float angle = Vector3.Angle(currentUp, targetUp);
+
+        StartCoroutine(RotateAndApplyGravity(rotationAxis, angle, newGravity));
+    }
+
+    IEnumerator RotateAndApplyGravity(Vector3 axis, float angle, Vector3 newGravity)
+    {
+        _isRotating = true;
+        _controlsLocked = true;
+        _cameraLocked = true;
+        _controller.enabled = false;
+
+        yield return StartCoroutine(RotateAroundPivot(axis, angle));
+
+        _gravityDirection = newGravity;
+        transform.up = -_gravityDirection;
+
+        _velocity = Vector3.zero;
+
+        _controller.enabled = true;
+        _isRotating = false;
+        _controlsLocked = false;
+        _cameraLocked = false;
+    }
+
+    private IEnumerator RotateAroundPivot(Vector3 worldAxis, float angle)
+    {
+        float rotated = 0f;
+        float sign = Mathf.Sign(angle);
+        float remainingAngle = Mathf.Abs(angle);
+
+        while (rotated < remainingAngle)
+        {
+            float step = _rotationSpeed * Time.deltaTime;
+
+            if (rotated + step > remainingAngle)
+                step = remainingAngle - rotated;
+
+            transform.RotateAround(_pivot.position, worldAxis, sign * step);
+
+            rotated += step;
+            yield return null;
+        }
     }
 
     void OnDrawGizmosSelected()
@@ -274,5 +342,20 @@ public class PlayerController : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(_groundCheck.position, _groundDistance);
         }
+
+        Vector3 origin = transform.position;
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(origin, origin + _gravityDirection * 2f);
+        Vector3 right = Vector3.Cross(_gravityDirection, Vector3.up);
+
+        if (right.sqrMagnitude < 0.001f)
+            right = Vector3.Cross(_gravityDirection, Vector3.forward);
+
+        Vector3 head1 = origin + _gravityDirection * 2f + right * 0.2f;
+        Vector3 head2 = origin + _gravityDirection * 2f - right * 0.2f;
+
+        Gizmos.DrawLine(origin + _gravityDirection * 2f, head1);
+        Gizmos.DrawLine(origin + _gravityDirection * 2f, head2);
     }
 }
