@@ -172,7 +172,7 @@
             "id": "642a88ab-223a-446c-917b-9bfaf50505ed",
             "actions": [
                 {
-                    "name": "Gravity",
+                    "name": "GravityDirection",
                     "type": "Value",
                     "id": "d72b12e6-942b-47df-9d0b-a1cc794e46e3",
                     "expectedControlType": "Vector2",
@@ -181,7 +181,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "ApplyGravity",
+                    "name": "GravityShift",
                     "type": "Button",
                     "id": "d145fdbd-b6f5-430d-99c8-2c31dba2f7e8",
                     "expectedControlType": "",
@@ -198,7 +198,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Gravity",
+                    "action": "GravityDirection",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -209,7 +209,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Gravity",
+                    "action": "GravityDirection",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -220,7 +220,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Gravity",
+                    "action": "GravityDirection",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -231,7 +231,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Gravity",
+                    "action": "GravityDirection",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -242,7 +242,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Gravity",
+                    "action": "GravityDirection",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -253,7 +253,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";KeyboardMouse",
-                    "action": "ApplyGravity",
+                    "action": "GravityShift",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
